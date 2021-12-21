@@ -1,7 +1,7 @@
 ﻿
 # EMY Linked**in** Applier
 
-This program for **linkedin** jobs. First of all, make review all open positions and looking email address. Secondly save all email address in database. Finally sending e mail all email address just one time.
+This program is for **LinkedIn** jobs. First of all, make review all open positions and looking email addresses. Secondly, save all email address in the database. Finally sending email all email address just one time.
 ### This program have 3 steps.
 | # | Process |
 | ------ | ------ |
