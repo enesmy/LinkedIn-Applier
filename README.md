@@ -7,7 +7,7 @@ This program for **linkedin** jobs. First of all, make review all open positions
 | ------ | ------ |
 | 1 | Enter locations. (SOUTH CAROLINE, NEW YORK, WASHINGTON ETC…) |
 | 2 | Search **(MUST CHROME BROWSER)** |
-| 3 | Send E-Mail **(MUST OUTLOOK)** |
+| 3 | Send E-Mail **(MUST MAIL CREDENTIAL INFORMATIONS)** |
 
 
 
