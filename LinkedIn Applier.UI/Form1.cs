@@ -10,7 +10,6 @@ using LinkedIn_Applier.Entities;
 using OpenQA.Selenium.Opera;
 using OpenQA.Selenium;
 using Microsoft.Office.Interop.Outlook;
-using DevExpress.XtraRichEdit;
 using LinkedIn_Applier.UI;
 using LinkedIn_Applier.Business;
 using OpenQA.Selenium.Chrome;
@@ -63,13 +62,11 @@ namespace LinkedIn_Applier
                 if (Result.Success)
                     AddEmail(Result.Value, Browser.Url);
             }
-
             return true;
         }
 
         private async void AddEmail(string EmailAdres, string WorkUrl)
         {
-
             string NewWorkUrl = GetWorkUrl(WorkUrl);
             if (!Emails.ContainsKey(EmailAdres))
             {
@@ -85,7 +82,6 @@ namespace LinkedIn_Applier
                                          Location = currentLocation,
                                          ProfileID = currentProfile.ProfileID
                                      });
-
                     Counter++;
                     LocationFounded++;
                     Logs.Write($"NEW E-Mail: { EmailAdres } and Url: { NewWorkUrl } This Area: {LocationFounded} - {currentLocation} { CurrentIndex} / {totalLocationCount}               --------- -- New Count: {Counter} -- ---------");
@@ -94,11 +90,7 @@ namespace LinkedIn_Applier
                 {
                     Logs.Write($"OLD E-Mail: { EmailAdres } and Url: { NewWorkUrl } This Area: {LocationFounded} - {currentLocation} { CurrentIndex} / {totalLocationCount}               --------- -- New Count: {Counter} -- ---------");
                 }
-
                 Emails.Add(EmailAdres, WorkUrl);
-
-
-
             }
         }
 
@@ -113,11 +105,9 @@ namespace LinkedIn_Applier
                               select new { email, profile }).ToList();
                 List<Task> sentTaskList = new List<Task>();
 
-
                 EmailSendConfigure emailSendConfigure = new EmailSendConfigure();
 
                 CredentialInformations credentials = AppSetting.ReadSetting();
-
 
                 emailSendConfigure.From = credentials.MailAdress;
                 emailSendConfigure.TOs = new string[] { };
@@ -169,18 +159,12 @@ namespace LinkedIn_Applier
             if (!result.IsSuccess) Logs.Write(result.Message);
         }
 
-        private string RemoveRTFFormatting(string rtfContent)
+        private string Rtf2Html(string rtfString)
         {
             EncodingProvider ppp = CodePagesEncodingProvider.Instance;
             Encoding.RegisterProvider(ppp);
-            return rtfContent;
-
+            return RtfPipe.Rtf.ToHtml(rtfString);
         }
-        private string Rtf2Html(string rtfString) =>
-            RtfPipe.Rtf.ToHtml(RemoveRTFFormatting(rtfString));
-
-
-
 
         private string ApplyParameters(string MainString, string WorkUrl, string Location, string ProfileName, string ProfileCode) =>
          MainString
@@ -189,12 +173,10 @@ namespace LinkedIn_Applier
                 .Replace("@ProfileName", ProfileName)
                 .Replace("@ProfileCode", ProfileCode);
 
-
         private void BtnSend_Click(object sender, EventArgs e)
         {
             SendAllWaitingEmails();
         }
-
         #endregion
 
         #region BROWSER PROCESSES
@@ -471,7 +453,6 @@ namespace LinkedIn_Applier
             setting.HideEverythingWhileSearching = cbHideEverything.Checked;
             setting.CurrentProfileRef = currentProfile.ProfileID;
             setting.SendAllProfile = rbSendAll.Checked;
-
         }
 
         private async void LoadSettings()
@@ -489,14 +470,10 @@ namespace LinkedIn_Applier
 
         private async void LoadProfiles()
         {
-
             cbProfiles.DataSource = await factory.Profiles.GetAllProfiles();
             cbProfiles.DisplayMember = "ProfileName";
             cbProfiles.ValueMember = "ProfileID";
-
         }
-
-
         #endregion
 
         #region Profile Processes
@@ -517,7 +494,6 @@ namespace LinkedIn_Applier
             await factory.Profiles.SaveProfile(prf);
             Messages.Info("Saved!");
             ProfileAnyThingChange = false;
-
         }
 
         void LoadProfile()
@@ -627,13 +603,10 @@ namespace LinkedIn_Applier
             ProfileChanged();
         }
 
-
-
         private void UndoRedoSet()
         {
             btnUndo.Enabled = rtbMessage.CanUndo;
             btnRedo.Enabled = rtbMessage.CanRedo;
-
         }
 
         private void BtnRedo_Click(object sender, EventArgs e)
@@ -664,11 +637,8 @@ namespace LinkedIn_Applier
             {
                 txtFileLocation.Text = opf.FileName;
             }
-
             ProfileChanged();
         }
-
-
         private void SetFontStyle(FontStyle fs)
         {
             Font fnt = rtbMessage.SelectionFont;
@@ -800,10 +770,7 @@ namespace LinkedIn_Applier
                     await factory.Profiles.SaveProfile(newProfile);
                     LoadProfiles();
                 }
-
             }
-
-
         }
 
         private async void btnDeleteProfile_Click(object sender, EventArgs e)
@@ -816,7 +783,6 @@ namespace LinkedIn_Applier
             DialogResult dr = Messages.AskInfo("Are you sure want to delete?");
             if (dr == DialogResult.Yes)
             {
-
                 int ID = (int)cbProfiles.SelectedValue;
                 var result = await factory.Profiles.DeleteProfile(ID);
                 if (result.IsSuccess) Messages.Info(result.Message);
