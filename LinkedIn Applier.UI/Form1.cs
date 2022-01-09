@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
+﻿using System.Text.RegularExpressions;
 using System.Diagnostics;
 using LinkedIn_Applier.Entities;
 using OpenQA.Selenium.Opera;
 using OpenQA.Selenium;
-using Microsoft.Office.Interop.Outlook;
 using LinkedIn_Applier.UI;
 using LinkedIn_Applier.Business;
 using OpenQA.Selenium.Chrome;
@@ -21,18 +14,19 @@ namespace LinkedIn_Applier
 {
     public partial class Form1 : Form
     {
+
         public Form1()
         {
             InitializeComponent();
             factory = new LinkedInDataFactory();
         }
         LinkedInDataFactory factory;
-
+        Browsers DefaultBrowser = Browsers.Chrome;
 
         #region DEFINATIONS
 
         bool ProfileAnyThingChange = false;
-        OperaDriver Browser;
+        WebDriver Browser;
         int LocationFounded = 0;
         string currentLocation = "";
         int totalLocationCount;
@@ -257,28 +251,50 @@ namespace LinkedIn_Applier
 
         }
 
-        private void RunChrome(string CookieLocation, string Location)
+        private void RunBrowser(string CookieLocation, string Location)
         {
+            DriverOptions driverOptions;
             notfoundcount = 0;
             if (Browser != null) CloseBrowser();
-            OperaOptions options = new OperaOptions();
 
-            options.AddArguments("user-data-dir=" + CookieLocation);
-            options.AddArgument("--start-maximized");
-            options.AddArgument("--disable-plugins");
-            options.AddArgument("no-sandbox");
-            //chromeOptions.AddArgument("disable-gpu");
-            if (cbHideEverything.Checked)
+            switch (DefaultBrowser)
             {
-                options.AddArgument("headless");
+                case Browsers.Chrome:
+                    ChromeDriverService chromeservice = ChromeDriverService.CreateDefaultService();
+                    driverOptions = new ChromeOptions();
+                    ((ChromeOptions)driverOptions).AddArguments("user-data-dir=" + CookieLocation);
+                    ((ChromeOptions)driverOptions).AddArgument("--start-maximized");
+                    ((ChromeOptions)driverOptions).AddArgument("--disable-plugins");
+                    if (cbHideEverything.Checked)
+                    {
+                        ((ChromeOptions)driverOptions).AddArgument("headless");
+                        ((ChromeOptions)driverOptions).AddArgument("no-sandbox");
+                        chromeservice.HideCommandPromptWindow = true;
+                    }
+                    Browser = new ChromeDriver(chromeservice, (ChromeOptions)driverOptions);
+                    break;
+                case Browsers.Opera:
+                    OperaDriverService service = OperaDriverService.CreateDefaultService();
+                    driverOptions = new OperaOptions();
+                    ((OperaOptions)driverOptions).AddArguments("user-data-dir=" + CookieLocation);
+                    ((OperaOptions)driverOptions).AddArgument("--start-maximized");
+                    ((OperaOptions)driverOptions).AddArgument("--disable-plugins");
+                    if (cbHideEverything.Checked)
+                    {
+                        ((OperaOptions)driverOptions).AddArgument("headless");
+                        ((OperaOptions)driverOptions).AddArgument("no-sandbox");
+                        service.HideCommandPromptWindow = true;
+                    }
+                    Browser = new OperaDriver(service, (OperaOptions)driverOptions);
+                    break;
+                default:
+                    break;
             }
 
-
-            OperaDriverService service = OperaDriverService.CreateDefaultService();
-            service.HideCommandPromptWindow = true;
-            //ChromeBrowser = new ChromeDriver(ChromeService, chromeOptions);
-
-            Browser = new OperaDriver();
+            if (Browser == null)
+            {
+                Logs.Write("Browser is null!");
+            }
 
             Browser.Manage().Cookies.DeleteAllCookies();
 
@@ -409,7 +425,10 @@ namespace LinkedIn_Applier
                         {
                             string dr = "C:/NonTemp/";
                             if (Directory.Exists(dr))
-                                Directory.Delete(dr);
+                            {
+                                Directory.Delete(dr, true);
+                            }
+
                             Directory.CreateDirectory(dr);
                         }
                         catch (System.Exception)
@@ -418,7 +437,7 @@ namespace LinkedIn_Applier
 
                         }
 
-                        RunChrome(@"C:/NonTemp/", location.Place);
+                        RunBrowser(@"C:/NonTemp/", location.Place);
                         ReviewAllPage();
                     }
                     catch (System.Exception ex)
@@ -435,6 +454,8 @@ namespace LinkedIn_Applier
             if (cbOutomaticSendEmail.Checked) SendAllWaitingEmails();
             if (cbHideEverything.Checked) this.Show();
         }
+
+       
 
         #endregion
 

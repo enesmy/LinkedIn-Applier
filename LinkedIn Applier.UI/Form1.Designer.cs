@@ -69,7 +69,7 @@
             // 
             // txtWorkType
             // 
-            this.txtWorkType.Location = new System.Drawing.Point(10, 222);
+            this.txtWorkType.Location = new System.Drawing.Point(10, 196);
             this.txtWorkType.Name = "txtWorkType";
             this.txtWorkType.Size = new System.Drawing.Size(417, 20);
             this.txtWorkType.TabIndex = 0;
@@ -77,14 +77,14 @@
             // 
             // txtLocation
             // 
-            this.txtLocation.Location = new System.Drawing.Point(12, 172);
+            this.txtLocation.Location = new System.Drawing.Point(12, 146);
             this.txtLocation.Name = "txtLocation";
             this.txtLocation.Size = new System.Drawing.Size(215, 20);
             this.txtLocation.TabIndex = 3;
             // 
             // btnSearch
             // 
-            this.btnSearch.Location = new System.Drawing.Point(10, 709);
+            this.btnSearch.Location = new System.Drawing.Point(12, 604);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(417, 28);
             this.btnSearch.TabIndex = 4;
@@ -95,7 +95,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(7, 204);
+            this.label1.Location = new System.Drawing.Point(7, 178);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(95, 13);
             this.label1.TabIndex = 5;
@@ -115,12 +115,12 @@
             this.lstLocations.FormattingEnabled = true;
             this.lstLocations.Location = new System.Drawing.Point(12, 68);
             this.lstLocations.Name = "lstLocations";
-            this.lstLocations.Size = new System.Drawing.Size(415, 95);
+            this.lstLocations.Size = new System.Drawing.Size(415, 69);
             this.lstLocations.TabIndex = 10;
             // 
             // btnDeleteLocation
             // 
-            this.btnDeleteLocation.Location = new System.Drawing.Point(333, 169);
+            this.btnDeleteLocation.Location = new System.Drawing.Point(333, 143);
             this.btnDeleteLocation.Name = "btnDeleteLocation";
             this.btnDeleteLocation.Size = new System.Drawing.Size(94, 23);
             this.btnDeleteLocation.TabIndex = 11;
@@ -130,7 +130,7 @@
             // 
             // btnAddLocation
             // 
-            this.btnAddLocation.Location = new System.Drawing.Point(233, 169);
+            this.btnAddLocation.Location = new System.Drawing.Point(233, 143);
             this.btnAddLocation.Name = "btnAddLocation";
             this.btnAddLocation.Size = new System.Drawing.Size(94, 23);
             this.btnAddLocation.TabIndex = 12;
@@ -141,7 +141,7 @@
             // cbOutomaticSendEmail
             // 
             this.cbOutomaticSendEmail.AutoSize = true;
-            this.cbOutomaticSendEmail.Location = new System.Drawing.Point(10, 653);
+            this.cbOutomaticSendEmail.Location = new System.Drawing.Point(12, 548);
             this.cbOutomaticSendEmail.Name = "cbOutomaticSendEmail";
             this.cbOutomaticSendEmail.Size = new System.Drawing.Size(155, 17);
             this.cbOutomaticSendEmail.TabIndex = 13;
@@ -176,8 +176,9 @@
             // 
             // lblAttachmentFile
             // 
+            this.lblAttachmentFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblAttachmentFile.AutoSize = true;
-            this.lblAttachmentFile.Location = new System.Drawing.Point(3, 331);
+            this.lblAttachmentFile.Location = new System.Drawing.Point(3, 252);
             this.lblAttachmentFile.Name = "lblAttachmentFile";
             this.lblAttachmentFile.Size = new System.Drawing.Size(95, 13);
             this.lblAttachmentFile.TabIndex = 19;
@@ -185,8 +186,9 @@
             // 
             // btmOpenFile
             // 
+            this.btmOpenFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btmOpenFile.Font = new System.Drawing.Font("Wide Latin", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btmOpenFile.Location = new System.Drawing.Point(369, 345);
+            this.btmOpenFile.Location = new System.Drawing.Point(369, 266);
             this.btmOpenFile.Name = "btmOpenFile";
             this.btmOpenFile.Size = new System.Drawing.Size(52, 23);
             this.btmOpenFile.TabIndex = 18;
@@ -196,7 +198,8 @@
             // 
             // txtFileLocation
             // 
-            this.txtFileLocation.Location = new System.Drawing.Point(6, 347);
+            this.txtFileLocation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.txtFileLocation.Location = new System.Drawing.Point(6, 268);
             this.txtFileLocation.Name = "txtFileLocation";
             this.txtFileLocation.ReadOnly = true;
             this.txtFileLocation.Size = new System.Drawing.Size(357, 20);
@@ -206,7 +209,7 @@
             // 
             this.rtbMessage.Location = new System.Drawing.Point(6, 78);
             this.rtbMessage.Name = "rtbMessage";
-            this.rtbMessage.Size = new System.Drawing.Size(418, 250);
+            this.rtbMessage.Size = new System.Drawing.Size(418, 170);
             this.rtbMessage.TabIndex = 16;
             this.rtbMessage.Text = "";
             this.rtbMessage.TextChanged += new System.EventHandler(this.rtbMessage_TextChanged);
@@ -215,7 +218,7 @@
             // btnSend
             // 
             this.btnSend.Font = new System.Drawing.Font("Wide Latin", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnSend.Location = new System.Drawing.Point(10, 743);
+            this.btnSend.Location = new System.Drawing.Point(12, 638);
             this.btnSend.Name = "btnSend";
             this.btnSend.Size = new System.Drawing.Size(417, 28);
             this.btnSend.TabIndex = 31;
@@ -240,9 +243,9 @@
             this.grpEmailDetails.Controls.Add(this.txtSubject);
             this.grpEmailDetails.Controls.Add(this.btnItalic);
             this.grpEmailDetails.Controls.Add(this.btnUnderline);
-            this.grpEmailDetails.Location = new System.Drawing.Point(3, 248);
+            this.grpEmailDetails.Location = new System.Drawing.Point(3, 222);
             this.grpEmailDetails.Name = "grpEmailDetails";
-            this.grpEmailDetails.Size = new System.Drawing.Size(435, 376);
+            this.grpEmailDetails.Size = new System.Drawing.Size(435, 297);
             this.grpEmailDetails.TabIndex = 32;
             this.grpEmailDetails.TabStop = false;
             // 
@@ -342,7 +345,7 @@
             // btnSaveSettings
             // 
             this.btnSaveSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.btnSaveSettings.Location = new System.Drawing.Point(327, 680);
+            this.btnSaveSettings.Location = new System.Drawing.Point(329, 575);
             this.btnSaveSettings.Name = "btnSaveSettings";
             this.btnSaveSettings.Size = new System.Drawing.Size(97, 23);
             this.btnSaveSettings.TabIndex = 34;
@@ -353,7 +356,7 @@
             // cbHideEverything
             // 
             this.cbHideEverything.AutoSize = true;
-            this.cbHideEverything.Location = new System.Drawing.Point(10, 630);
+            this.cbHideEverything.Location = new System.Drawing.Point(12, 525);
             this.cbHideEverything.Name = "cbHideEverything";
             this.cbHideEverything.Size = new System.Drawing.Size(207, 17);
             this.cbHideEverything.TabIndex = 33;
@@ -403,7 +406,7 @@
             // 
             this.rbSendAll.AutoSize = true;
             this.rbSendAll.Checked = true;
-            this.rbSendAll.Location = new System.Drawing.Point(10, 676);
+            this.rbSendAll.Location = new System.Drawing.Point(12, 571);
             this.rbSendAll.Name = "rbSendAll";
             this.rbSendAll.Size = new System.Drawing.Size(112, 17);
             this.rbSendAll.TabIndex = 38;
@@ -414,7 +417,7 @@
             // rbSendCurrent
             // 
             this.rbSendCurrent.AutoSize = true;
-            this.rbSendCurrent.Location = new System.Drawing.Point(128, 676);
+            this.rbSendCurrent.Location = new System.Drawing.Point(130, 571);
             this.rbSendCurrent.Name = "rbSendCurrent";
             this.rbSendCurrent.Size = new System.Drawing.Size(139, 17);
             this.rbSendCurrent.TabIndex = 39;
@@ -439,7 +442,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(444, 778);
+            this.ClientSize = new System.Drawing.Size(444, 672);
             this.Controls.Add(this.btnSaveProfile);
             this.Controls.Add(this.btnSaveSettings);
             this.Controls.Add(this.rbSendCurrent);
