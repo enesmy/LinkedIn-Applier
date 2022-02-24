@@ -200,9 +200,11 @@ namespace LinkedIn_Applier
                     GoToNextPage();
                     goto countUL;
                 }
-
-                for (int i = 0; i < findeds; i++)
+                var rangefinded = Enumerable.Range(0, findeds).ToList();
+                while (rangefinded.Count > 0)
                 {
+                    var i = rangefinded.First();
+
                     try
                     {
                         IWebElement Work = ULTags.ToArray()[i];
@@ -211,10 +213,22 @@ namespace LinkedIn_Applier
                     lookmail:
                         if (!LookNewEmail())
                         {
-                            Work = ULTags.ToArray()[i + 1];
-                            Work.Click();
-                            System.Threading.Thread.Sleep(1000);
-
+                            if (rangefinded.Count() > 1)
+                            {
+                                Work = ULTags.ToArray()[rangefinded[1]];
+                                Work.Click();
+                                System.Threading.Thread.Sleep(1000);
+                                if (LookNewEmail())
+                                {
+                                    RunScript("document.evaluate('//*[@id=\"main-content\"]/section[2]/ul/li[2]', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.remove();");
+                                    rangefinded.RemoveAt(1);
+                                }
+                            }
+                            else
+                            {
+                                GoToNextPage();
+                                goto countUL;
+                            }
                             Work = ULTags.ToArray()[i];
                             Work.Click();
                             System.Threading.Thread.Sleep(1000);
@@ -225,10 +239,9 @@ namespace LinkedIn_Applier
                     {
                     }
                     RunScript("document.evaluate('//*[@id=\"main-content\"]/section[2]/ul/li[1]', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.remove();");
-                    //jobIndex++;
-
-
+                    rangefinded.RemoveAt(0);
                 }
+
                 GoToNextPage();
                 goto countUL;
             }
@@ -294,6 +307,7 @@ namespace LinkedIn_Applier
             if (Browser == null)
             {
                 Logs.Write("Browser is null!");
+                return;
             }
 
             Browser.Manage().Cookies.DeleteAllCookies();
@@ -301,7 +315,6 @@ namespace LinkedIn_Applier
             Browser.Url = "https://www.linkedin.com/jobs/";
 
             System.Threading.Thread.Sleep(2000);
-
 
             IWebElement SearchBox = Browser.FindElements(by: By.XPath("//*[@id=\"JOBS\"]/section[1]/input")).ToList().First();
             if (SearchBox == null)
@@ -317,10 +330,8 @@ namespace LinkedIn_Applier
             LocationBox.SendKeys(Location);
             System.Threading.Thread.Sleep(500);
 
-
             LocationBox.Submit();
             System.Threading.Thread.Sleep(500);
-
 
         }
 
@@ -407,11 +418,12 @@ namespace LinkedIn_Applier
             totalLocationCount = 0;
             foreach (var profile in profiles)
             {
-                totalLocationCount += profile.Locations.Count;
+                totalLocationCount += profile.Locations.Where(o=>!o.IsDeleted).Count();
             }
 
             foreach (var profile in profiles)
             {
+                var currentlocations = profile.Locations.OrderBy(o => o.Rate);
                 currentProfile = profile;
                 foreach (Location location in profile.Locations)
                 {
@@ -446,6 +458,7 @@ namespace LinkedIn_Applier
                     }
 
                     CloseBrowser();
+                    await factory.Locations.IncriseRate(location);
                 }
             }
 
@@ -455,7 +468,7 @@ namespace LinkedIn_Applier
             if (cbHideEverything.Checked) this.Show();
         }
 
-       
+
 
         #endregion
 
@@ -530,6 +543,7 @@ namespace LinkedIn_Applier
         private async void LoadProfileLocations()
         {
             int ID = currentProfile.ProfileID;
+            if (ID == 0) return;
             var list = (await factory.Locations.GetAllLocationsFromProfileID(ID)).OrderBy(o => o.Place).ToList();
             lstLocations.DataSource = list;
             lstLocations.DisplayMember = "Place";
@@ -726,17 +740,18 @@ namespace LinkedIn_Applier
 
         private async void cbProfiles_SelectedIndexChanged(object sender, EventArgs e)
         {
+            await ProfileSelected();
+        }
+
+        private async Task ProfileSelected()
+        {
             if (ProfileAnyThingChange)
             {
-                DialogResult dr = Messages.AskInfo("Modified Profile! Do you want to save changes?");
-                if (dr == DialogResult.Yes)
-                {
-                    SaveProfile();
-
-                }
+                DialogResult answer = Messages.AskInfo("Modified Profile! Do you want to save changes?");
+                if (answer == DialogResult.Yes) SaveProfile();
             }
-            if (cbProfiles.SelectedItem == null)
-                return;
+            if (cbProfiles.SelectedItem == null) return;
+
             int ID = ((Profile)cbProfiles.SelectedItem).ProfileID;
 
             currentProfile = await factory.Profiles.GetProfileFromProfileID(ID);
@@ -746,13 +761,11 @@ namespace LinkedIn_Applier
 
         private async void btnAddProfile_Click(object sender, EventArgs e)
         {
-            if (ProfileAnyThingChange)
+            if (!ProfileAnyThingChange) return;
+            DialogResult dr = Messages.AskInfo("Modified Profile! Do you want to save changes?");
+            if (dr == DialogResult.Yes)
             {
-                DialogResult dr = Messages.AskInfo("Modified Profile! Do you want to save changes?");
-                if (dr == DialogResult.Yes)
-                {
-                    SaveProfile();
-                }
+                SaveProfile();
             }
 
             string ProfileName = "";
@@ -763,35 +776,36 @@ namespace LinkedIn_Applier
             frmNew.txtProfileName.Text = ProfileName;
             frmNew.txtProfileCode.Text = ProfileCode;
 
-            if (frmNew.ShowDialog() == DialogResult.OK)
-            {
-                ProfileName = frmNew.txtProfileName.Text;
-                ProfileCode = frmNew.txtProfileCode.Text;
+            if (frmNew.ShowDialog() != DialogResult.OK) return;
 
-                if ((await factory.Profiles.GetAllProfiles()).Count(o => o.ProfileName == ProfileName) > 0)
-                {
-                    Messages.Error("Please check profile name!");
-                    frmNew = new frmNewProfile();
-                    frmNew.txtProfileName.Focus();
-                    goto StepBeginning;
-                }
-                else if ((await factory.Profiles.GetAllProfiles()).Count(o => o.ProfileShortName == ProfileCode) > 0)
-                {
-                    Messages.Error("Please check profile code!");
-                    frmNew = new frmNewProfile();
-                    frmNew.txtProfileCode.Focus();
-                    goto StepBeginning;
-                }
-                else
-                {
-                    Profile newProfile = new Profile();
-                    newProfile.ProfileName = ProfileName;
-                    newProfile.ProfileShortName = ProfileCode;
-                    newProfile.IsDeleted = false;
-                    await factory.Profiles.SaveProfile(newProfile);
-                    LoadProfiles();
-                }
+            ProfileName = frmNew.txtProfileName.Text;
+            ProfileCode = frmNew.txtProfileCode.Text;
+            var profiles = await factory.Profiles.GetAllProfiles();
+            if (profiles.Count(o => o.ProfileName == ProfileName) > 0)
+            {
+                Messages.Error("Please check profile name!");
+                frmNew = new frmNewProfile();
+                frmNew.txtProfileName.Focus();
+                goto StepBeginning;
             }
+
+
+            if (profiles.Count(o => o.ProfileShortName == ProfileCode) > 0)
+            {
+                Messages.Error("Please check profile code!");
+                frmNew = new frmNewProfile();
+                frmNew.txtProfileCode.Focus();
+                goto StepBeginning;
+            }
+
+
+            Profile newProfile = new Profile();
+            newProfile.ProfileName = ProfileName;
+            newProfile.ProfileShortName = ProfileCode;
+            newProfile.IsDeleted = false;
+            await factory.Profiles.SaveProfile(newProfile);
+            LoadProfiles();
+
         }
 
         private async void btnDeleteProfile_Click(object sender, EventArgs e)

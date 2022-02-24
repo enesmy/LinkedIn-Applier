@@ -19,7 +19,7 @@ namespace LinkedIn_Applier.Business.Concrete
         public override async Task<(bool IsSuccess, string Message)> DeleteProfile(int profileID)
         {
             var foundProfile = await repository.GetByPrimaryKey(profileID);
-            if (foundProfile != null) await repository.HardRemove(foundProfile.ProfileID);
+            if (foundProfile != null) await repository.Remove(foundProfile.ProfileID);
             else return (false, "Profile not exist!");
             return (true, "Profile removed!");
         }
@@ -34,6 +34,7 @@ namespace LinkedIn_Applier.Business.Concrete
 
             var result = (from profile in profiles
                           join location in Locations on profile.ProfileID equals location.ProfileID into profilelocation
+                         where !profile.IsDeleted
                           select new VMProfile()
                           {
                               ProfileID = profile.ProfileID,

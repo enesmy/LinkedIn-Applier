@@ -1,4 +1,5 @@
 ﻿using LinkedIn_Applier.DataAccess.Abstract;
+using LinkedIn_Applier.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -55,19 +56,19 @@ namespace LinkedIn_Applier.DataAccess.Concrete
         public async Task Remove(int entityID)
         {
             T existing = await table.FindAsync(entityID);
-            await SaveChanges();
+            if (existing is BaseEntity x)
+            {
+                x.IsDeleted = true;
+                x.DeleteDateTime = DateTime.Now;
+            }
+            await Update(existing);
         }
 
         public async Task HardRemove(int entityID)
         {
-#if DEBUG
             T existing = await table.FindAsync(entityID);
             table.Remove(existing);
             await SaveChanges();
-#endif
-#if RELEASE
-            throw new MethodAccessException("You can not hard remove in RELEASE mode!");
-#endif
         }
 
         public async Task<IEnumerable<T>> GetAll()

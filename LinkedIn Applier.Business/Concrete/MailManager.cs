@@ -28,7 +28,7 @@ namespace LinkedIn_Applier.Business.Concrete
 
         public override async Task<List<Mail>> GetAllWaitingMails()
         {
-            var result = await repository.GetWhereWithNoTrack(o => o.EmailSent != true);
+            var result = await repository.GetWhereWithNoTrack(o => o.EmailSent != true );
             return result.ToList();
         }
 

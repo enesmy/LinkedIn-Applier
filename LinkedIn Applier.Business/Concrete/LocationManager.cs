@@ -26,15 +26,22 @@ namespace LinkedIn_Applier.Business.Concrete
         }
 
         public override async Task<List<Location>> GetAllLocationsFromProfileID(int profileID) =>
-            (await repository.GetWhereWithNoTrack(o => o.ProfileID == profileID)).ToList();
+            (await repository.GetWhereWithNoTrack(o => o.ProfileID == profileID && !o.IsDeleted)).ToList();
 
 
         public override async Task<(bool IsSuccess, string Message)> RemoveLocation(int locationID)
         {
             var foundLocation = await repository.GetByPrimaryKey(locationID);
-            if (foundLocation != null) await repository.HardRemove(foundLocation.LocationID);
+            if (foundLocation != null) await repository.Remove(foundLocation.LocationID);
             else return (false, "Location not exist!");
             return (true, "Location removed!");
+        }
+
+        public override async Task IncriseRate(Location location)
+        {
+            var dblocation = await repository.GetByPrimaryKey(location.LocationID);
+            dblocation.Rate++;
+            await repository.Update(dblocation);
         }
     }
 }

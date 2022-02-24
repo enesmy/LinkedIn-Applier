@@ -15,6 +15,7 @@ namespace LinkedIn_Applier.Entities
         public int LocationID { get; set; }
         public string Place { get; set; }
         public int ProfileID { get; set; }
+        public int Rate { get; set; }
 
         [ForeignKey("ProfileID")] public virtual Profile Profile { get; set; }
     }
